@@ -1,0 +1,6 @@
+.claude
+.github
+.vs
+.vscode
+bin/
+build/
