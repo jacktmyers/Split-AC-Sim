@@ -39,7 +39,7 @@ Write-Host "Frames extracted successfully."
 Write-Host "Activating slam3r environment and running reconstruction..."
 conda activate slam3r
 Push-Location $SlamDir
-python recon.py --device cuda --dataset ../img/$basename/ --keyframe_stride -1 --buffer_size 70 --test_name $basename --save_dir ../points/
+python recon.py --device cuda --dataset ../img/$basename/ --keyframe_stride -1 --buffer_size 70 --test_name $basename --save_dir ../points/original/
 if ($LASTEXITCODE -ne 0) {
     Pop-Location
     Write-Error "SLAM3R reconstruction failed."
