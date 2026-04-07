@@ -6,6 +6,6 @@ bin/
 FluidSim/bin/
 build/
 CLAUDE.md
-Reconstruction/img/*/*.img
+Reconstruction/img/*/*.png
 *.ply
 *.mp4
