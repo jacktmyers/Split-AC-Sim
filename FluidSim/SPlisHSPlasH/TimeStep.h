@@ -1,0 +1,61 @@
+#pragma once
+
+#include "Common.h"
+#include "ParameterObject.h"
+#include "FluidModel.h"
+#include "BoundaryModel.h"
+#include "Discregrid/discrete_grid.hpp"
+
+namespace SPH
+{
+	/** \brief Base class for the simulation methods. 
+	*/
+	class TimeStep : public GenParam::ParameterObject
+	{
+	protected:
+		/** Clear accelerations and add gravitation.
+		*/
+		void clearAccelerations(const unsigned int fluidModelIndex);
+
+		virtual void initParameters();
+
+		void approximateNormal(Discregrid::DiscreteGrid* map, const Eigen::Vector3d &x, Eigen::Vector3d &n, const unsigned int dim);
+		void computeVolumeAndBoundaryX(const unsigned int fluidModelIndex, const unsigned int i, const Vector3r &xi);
+		void computeVolumeAndBoundaryX();
+		void computeDensityAndGradient(const unsigned int fluidModelIndex, const unsigned int i, const Vector3r &xi);
+		void computeDensityAndGradient();
+
+	public:
+		TimeStep();
+		virtual ~TimeStep(void);
+
+		/** Determine densities of all fluid particles.
+		*/
+		void computeDensities(const unsigned int fluidModelIndex);
+
+		/** returns the name of the method */
+		virtual std::string getMethodName() = 0;
+		virtual void step() = 0;
+		virtual void reset();
+
+		virtual void init();
+		virtual void resize() = 0;
+
+		virtual void emittedParticles(FluidModel *model, const unsigned int startIndex) {};
+
+		/** Important: First call m_model->performNeighborhoodSearchSort()
+			 * to call the z_sort of the neighborhood search.
+			 */
+		virtual void performNeighborhoodSearchSort() {};
+
+		virtual void saveState(BinaryFileWriter &binWriter) {};
+		virtual void loadState(BinaryFileReader &binReader) {};
+
+		virtual int getNumIterations() = 0;
+
+#ifdef USE_PERFORMANCE_OPTIMIZATION
+		void precomputeValues();
+#endif
+	};
+}
+
